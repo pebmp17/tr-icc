@@ -7,8 +7,8 @@ int soliConta();
 
  int main(void)
 {
-	int optmainmenu=0;
-	while (optmainmenu = 0){
+	int optmainmenu= 1;
+	while (optmainmenu != 4){
 		puts ("Bem Vindo.");
 		puts ("Quais dessas opçoes voce deseja usar?");
 		puts ("1. Gerenciar itens do cardapio");
@@ -31,10 +31,9 @@ int soliConta();
 				break;
 			case 4:
 				puts ("Opção escolhida: 4.Sair do Sistema");
-				optmainmenu = 0;
 				continue;
 			default :
-				puts("Opção Invalida");
+				puts("\nOpção Invalida");
 		}
 	}
 	return 0;
