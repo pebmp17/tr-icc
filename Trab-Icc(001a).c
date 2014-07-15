@@ -1,9 +1,11 @@
+#include <strings.h>
 #include "stdio.h"
+
+
+
 int mGerenCard();
 int mkPedido();
 int soliConta();
-
-
 
  int main(void)
 {
@@ -40,8 +42,35 @@ int soliConta();
 }
 
 int mGerenCard(){
+	int strcmp(const char*__s1, const char*__s2);
+	int menuGerenBebidas();
+	int menuGerenComidas();
+	char bOUc[15];
+	int scape = 0;
+	scanf("%s", bOUc);
+	while (scape != 1){
+		puts ("Voce deseja gerenciar bebidas ou comidas?");
+		if((strcmp(bOUc, "Bebidas") == 0) ||  (strcmp(bOUc, "Bebidas")) == 0){
+			scape = 1;
+		  menuGerenComidas();
+		}
+		else if ((strcmp(bOUc,"Comidas") == 0) || (strcmp(bOUc,"comidas") == 0)){
+			scape = 1;
+			menuGerenBebidas();
+		}
+		else 
+		{
+			puts("Só é possivel gerenciar Comidas ou Bebidas");
+		}
+	}
 	return 0;
+	
 }
+int menuGerenBebidas()
+	{
+		return 0;
+	}
+
 int mkPedido(){
 	return 0;
 }
