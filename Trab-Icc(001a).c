@@ -1,6 +1,5 @@
+#include <stdio.h>
 #include <strings.h>
-#include "stdio.h"
-
 
 
 int mGerenCard();
@@ -16,17 +15,7 @@ int main(void)
     puts ("2. Fazer um Pedido");
     puts ("3. Solicitar Conta");
     puts ("4. Sair do sistema");
-    gets (&optmainmenu);
-    while ((optmainmenu>'4') ||(optmainmenu<'1'))
-    {
-        puts("Opcao Invalida");
-        puts ("Quais dessas opcoes voce deseja usar?");
-        puts ("1. Gerenciar itens do cardapio");
-        puts ("2. Fazer um Pedido");
-        puts ("3. Solicitar Conta");
-        puts ("4. Sair do sistema");
-        gets(&optmainmenu);
-    }
+    scanf ("%s", &optmainmenu);
     switch (optmainmenu)
     {
     case '1':
@@ -44,13 +33,20 @@ int main(void)
     case '4':
         puts ("Opcao escolhida: 4.Sair do Sistema");
         break;
+    default:
+    	puts("Opcao Invalida");
+        puts ("Quais dessas opcoes voce deseja usar?");
+        puts ("1. Gerenciar itens do cardapio");
+        puts ("2. Fazer um Pedido");
+        puts ("3. Solicitar Conta");
+        puts ("4. Sair do sistema");
+        scanf("%s",&optmainmenu);    
     }
     return 0;
 }
 
 int mGerenCard()
 {
-    /*int strcmp(const char*__s1, const char*__s2); */
     int menuGerenBebidas();
     int menuGerenComidas();
     char bOUc[15];
