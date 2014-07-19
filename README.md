@@ -1,26 +1,26 @@
 Menu Principal
 ======
-1.Gerenciar Itens
-2.Fazer Pedido
-3.Solicitar Conta
-4.Sair do Sistema
+* 1.Gerenciar Itens
+* 2.Fazer Pedido
+* 3.Solicitar Conta
+* 4.Sair do Sistema
 
 Menu 1
 ------
-1.Comidas
-2.Bebidas
+* 1.Comidas
+* 2.Bebidas
 
 -MENU COMIDAS
-1.Cadastrar Item
-2.Editar Item
-3.Consultar Item
-4.Remover Item
+* 1.Cadastrar Item
+* 2.Editar Item
+* 3.Consultar Item
+* 4.Remover Item
 
 -MENU BEBIDAS
-1.Cadastrar Item
-2.Editar Item
-3.Consultar Item
-4.Remover Item
+* 1.Cadastrar Item
+* 2.Editar Item
+* 3.Consultar Item
+* 4.Remover Item
 
 Menu 2
 ------
