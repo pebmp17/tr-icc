@@ -24,8 +24,8 @@ Menu 1
 
 Menu 2
 ------
-Listar Itens,Solicitar o desejado, armazenar o pedido em arquivo.
+Listar Itens,Solicitar o desejado, Armazenar o pedido em arquivo.
 
 Menu 3
 ------
-Receber o número da mesa, apresentar o que foi consumido e seu preço unitario, apresentar valor total.
+Receber o número da mesa, Apresentar o que foi consumido e seu preço unitario, Apresentar valor total.
