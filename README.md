@@ -5,7 +5,7 @@ Menu Principal
 * 3.Solicitar Conta
 * 4.Sair do Sistema
 
-Menu 1
+Menu Gerência
 ------
 * 1.Comidas
 * 2.Bebidas
@@ -22,10 +22,10 @@ Menu 1
 3.Consultar Item                                                                                                            
 4.Remover Item                                                                                                              
 
-Menu 2
+Menu Pedido
 ------
-Listar Itens,Solicitar o desejado, Armazenar o pedido em arquivo.
+Listar Itens do cardapio,Solicitar o desejado, Armazenar o pedido em arquivo.
 
-Menu 3
+Menu Conta
 ------
 Receber o número da mesa, Apresentar o que foi consumido e seu preço unitario, Apresentar valor total.

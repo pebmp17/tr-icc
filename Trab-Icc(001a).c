@@ -6,11 +6,12 @@ int mGerenCard();
 int mkPedido();
 int soliConta();
 
+
 int main(void)
 {
-    char optmainmenu='1';
+    char optmainmenu=' ';
     puts ("Bem Vindo.");
-    puts ("Quais dessas opcoes voce deseja usar?");
+    puts ("Qual opcao voce deseja usar?");
     puts ("1. Gerenciar itens do cardapio");
     puts ("2. Fazer um Pedido");
     puts ("3. Solicitar Conta");
@@ -47,25 +48,26 @@ int main(void)
 
 int mGerenCard()
 {
-    int menuGerenBebidas();
-    int menuGerenComidas();
+	int menuGerenItens(int n);
     char bOUc[15];
     int scape = 0;
-    while (scape != 1)
+    while (scape == 0)
     {
-        puts ("Voce deseja gerenciar bebidas ou comidas?");
+        puts ("Voce deseja gerenciar Bebidas ou Comidas?");
         scanf("%s", bOUc);
         if((strcmp(bOUc, "Bebidas") == 0) || (strcmp(bOUc, "bebidas")) == 0)
         {
             scape = 1;
-            puts("Bebidas\n");
-            menuGerenComidas();
+            puts("\nBebidas");
+            puts("--------");
+            menuGerenItens(1);
         }
         else if ((strcmp(bOUc,"Comidas") == 0) || (strcmp(bOUc,"comidas") == 0))
         {
             scape = 1;
-            puts("Comidas\n");
-            menuGerenBebidas();
+            puts("\nComidas");
+            puts("--------");
+            menuGerenItens(2);
         }
         else
         {
@@ -73,15 +75,73 @@ int mGerenCard()
         }
     }
     return 0;
+    
+}
 
-}
-int menuGerenBebidas()
-{
-    return 0;
-}
-int menuGerenComidas()
-{
-    return 0;
+int menuGerenItens(int n) {
+	char gerenc[20];
+	int scape2 = 0;
+	if (n = 1){
+		puts("Voce deseja Cadastrar, Editar, Consultar ou Remover uma Bebida do cardapio?");
+	}
+	else if (n = 2)
+	{
+		puts("Voce deseja Cadastrar, Editar, Consultar ou Remover uma Comida do cardapio?");
+	}
+	scanf("%s",&gerenc);
+	while (scape2 = 0){
+		if((strcmp(gerenc, "Cadastrar") == 0) || (strcmp(gerenc, "cadastrar")) == 0) {
+			if (n = 1)
+			{
+				scape2 = 1;
+				//Cadastrar bebidas
+			}
+			else if (n = 2)
+			{
+				scape2 = 1;
+				//Cadastrar Comidas
+			}
+		}
+		else if((strcmp(gerenc, "Editar") == 0) || (strcmp(gerenc, "editar")) == 0){
+			if (n=1)
+			{
+				scape2 = 1;
+				//Editar bebidas
+			}
+			else if (n = 2)
+			{
+				scape2 = 1;
+				//Editar Comidas
+			}
+		}
+		else if((strcmp(gerenc, "Consultar") == 0) || (strcmp(gerenc, "consultar")) == 0){
+			if (n=1)
+			{
+				scape2 = 1;
+				//Consultar bebidas
+			}
+			else if (n = 2)
+			{
+				scape2 = 1;
+				//Consultar Comidas
+			}	
+		}
+		else if((strcmp(gerenc, "Remover") == 0) || (strcmp(gerenc, "remover")) == 0){
+			if (n=1)
+			{
+				scape2 = 1;
+				//Remover bebidas
+			}
+			else if (n = 2)
+			{
+				scape2 = 1;
+				//Remover Comidas
+			}	
+		}
+		else{
+			puts ("Operaçao nao aceita");
+		}
+	}
 }
 
 int mkPedido()
