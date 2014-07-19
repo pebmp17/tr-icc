@@ -7,8 +7,6 @@ Menu Principal
 
 Menu Gerência
 ------
-* 1.Comidas
-* 2.Bebidas
 
 * MENU COMIDAS                                                                                                              
 1.Cadastrar Item                                                                                                            
