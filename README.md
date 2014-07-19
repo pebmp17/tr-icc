@@ -10,17 +10,17 @@ Menu 1
 * 1.Comidas
 * 2.Bebidas
 
--MENU COMIDAS
-* 1.Cadastrar Item
-* 2.Editar Item
-* 3.Consultar Item
-* 4.Remover Item
+* MENU COMIDAS                                                                                                              
+1.Cadastrar Item                                                                                                            
+2.Editar Item                                                                                                               
+3.Consultar Item                                                                                                            
+4.Remover Item                                                                                                              
 
--MENU BEBIDAS
-* 1.Cadastrar Item
-* 2.Editar Item
-* 3.Consultar Item
-* 4.Remover Item
+* MENU BEBIDAS                                                                                                              
+1.Cadastrar Item                                                                                                            
+2.Editar Item                                                                                                               
+3.Consultar Item                                                                                                            
+4.Remover Item                                                                                                              
 
 Menu 2
 ------
