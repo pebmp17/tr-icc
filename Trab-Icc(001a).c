@@ -81,15 +81,16 @@ int mGerenCard()
 int menuGerenItens(int n) {
 	char gerenc[20];
 	int scape2 = 0;
-	if (n = 1){
-		puts("Voce deseja Cadastrar, Editar, Consultar ou Remover uma Bebida do cardapio?");
-	}
-	else if (n = 2)
+	while (scape2 == 0)
 	{
-		puts("Voce deseja Cadastrar, Editar, Consultar ou Remover uma Comida do cardapio?");
-	}
-	scanf("%s",&gerenc);
-	while (scape2 = 0){
+		if (n = 1){
+			puts("Voce deseja Cadastrar, Editar, Consultar ou Remover uma Bebida do cardapio?");
+		}
+		else if (n = 2)
+		{
+			puts("Voce deseja Cadastrar, Editar, Consultar ou Remover uma Comida do cardapio?");
+		}
+		scanf("%s",&gerenc);
 		if((strcmp(gerenc, "Cadastrar") == 0) || (strcmp(gerenc, "cadastrar")) == 0) {
 			if (n = 1)
 			{
