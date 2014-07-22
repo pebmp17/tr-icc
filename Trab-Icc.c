@@ -81,6 +81,9 @@ int mGerenCard()
 int menuGerenItens(int n) {
 	char gerenc[20];
 	int scape2 = 0;
+	char temp[30];
+	FILE *arq_com;
+	FILE *arq_bebi;
 	while (scape2 == 0)
 	{
 		if (n = 1){
@@ -94,8 +97,19 @@ int menuGerenItens(int n) {
 		if((strcmp(gerenc, "Cadastrar") == 0) || (strcmp(gerenc, "cadastrar")) == 0) {
 			if (n = 1)
 			{
+				arq_bebi = fopen ("cardapio_bebidas.txt","a");
+				if (arq_bebi == NULL)
+				{
+					puts("Houve um erro ao abrir o cardapio de bebidas.");
+				}
+				puts("Qual bebida voce deseja cadastrar?");
+				scanf("%s",temp);
+				//Inserir criação de Codigo da Bebida
+				fprintf(arq_bebi, "%s", temp);
+				fclose(arq_bebi);
+				printf("A bebida %s foi castrada com sucesso\n", temp);
 				scape2 = 1;
-				//Cadastrar bebidas
+				
 			}
 			else if (n = 2)
 			{
