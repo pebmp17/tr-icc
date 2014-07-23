@@ -1,4 +1,5 @@
 #include <stdio.h>
+#inclu#include <stdio.h>
 #include <string.h>
 
 
@@ -90,11 +91,14 @@ int mGerenCard()
 
 int menuGerenItens(int n)
 {
+    int codtemp;
     char gerenc[20];
     int scape4 = 0 ,scape2 = 0;
     char resp[10] ,temp[30];
+    FILE *arq_sis;
     FILE *arq_com;
     FILE *arq_bebi;
+    int buffer;
     while (scape2 == 0)
     {
         if (n = 1)
@@ -119,9 +123,16 @@ int menuGerenItens(int n)
                 {
                     puts("Qual bebida voce deseja cadastrar?");
                     scanf("%s",temp);
+                    arq_sis = fopen("sistema.txt","r+");
+                    fseek(arq_sis, SEEK_SET, 0);
+                    fread(buffer, 8, 1, arq_sis);
+                    printf("%d",buffer);
+                    //while (codtemp
                     //Inserir criação de Codigo da Bebida
-                    fprintf(arq_bebi, "%s\n", temp);
+                    fprintf(arq_bebi, "%d %s\n", temp, codtemp);
                     fclose(arq_bebi);
+                    fseek(arq_sis, SEEK_SET, 0);
+                    fprintf(arq_sis,"%d", buffer+1);
                     printf("A bebida %s foi castrada com sucesso\n", temp);
                     puts("");
                     puts("Voce deseja cadastrar outra bebida?");
