@@ -5,8 +5,8 @@
 int mGerenCard();
 int mkPedido();
 int soliConta();
+char optmainmenu= ' ';
 
-char optmainmenu=' ';
 int main()
 {
     puts ("Bem Vindo.");
@@ -15,29 +15,29 @@ int main()
     puts ("2. Fazer um Pedido");
     puts ("3. Solicitar Conta");
     puts ("4. Sair do sistema");
-    if(optmainmenu != '4'){
-        scanf ("%s", &optmainmenu);
-    }
+    scanf ("%s", &optmainmenu);
     while(optmainmenu != '4')
     {
-        switch (optmainmenu)
+        if (optmainmenu== '1')
         {
-        case '1':
             puts("Opcao escolhida: 1.Gerenciar itens do cardapio");
+            optmainmenu = ' ';
             mGerenCard();
             break;
-        case '2':
+        }
+        else if(optmainmenu == '2'){
             puts("Opcao escolhida: 2.Fazer um Pedido");
             mkPedido();
-            break;
-        case '3':
+            }
+        else if (optmainmenu == '3'){
             puts ("Opcao escolhida: 3.Solicitar Conta");
             soliConta();
-            break;
-        case '4':
+        }
+        else if (optmainmenu == '4'){
             puts ("Opcao escolhida: 4.Sair do Sistema");
-            break;
-        default:
+            optmainmenu = ' ';
+        }
+        else{
             puts("Opcao Invalida");
             puts ("Quais dessas opcoes voce deseja usar?");
             puts ("1. Gerenciar itens do cardapio");
@@ -75,7 +75,8 @@ int mGerenCard()
         }
          else if ((strcmp(bOUc,"Voltar") == 0) || (strcmp(bOUc,"voltar") == 0)){
                 puts("");
-                optmainmenu='4';
+                scape = 1;
+                optmainmenu= ' ';
                 main();
          }
         else
@@ -98,7 +99,7 @@ int menuGerenItens(int n)
     {
         if (n = 1)
         {
-            puts("Voce deseja Cadastrar, Editar, Consultar ou Remover uma Bebida do cardapio?");
+            puts("Voce deseja Cadastrar, Editar, Consultar ou Remover uma Bebida do cardapio ?");
         }
         else if (n = 2)
         {
@@ -187,9 +188,10 @@ int menuGerenItens(int n)
             }
 
         }
-        else if((strcmp(gerenc, "Nao") == 0) || (strcmp(gerenc, "nao")) == 0)
+        else if((strcmp(gerenc, "Voltar") == 0) || (strcmp(gerenc, "voltar")) == 0)
         {
             puts("");
+            scape2 = 1;
             main();
         }
         else
