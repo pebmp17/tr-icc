@@ -6,7 +6,7 @@ int mGerenCard();
 int mkPedido();
 int soliConta();
 int cadastrar_Item(FILE *arq, int noi);
-char optmainmenu= ' ';
+char optmainmenu = ' ';
 
 int main()
 {
@@ -109,7 +109,7 @@ int menuGerenItens(int n)
 		{
 			if (n == 1)
 			{
-				arq_geren = fopen ("cardapio_bebidas.txt","a");
+				arq_geren = fopen ("cardapio_bebidas.txt","w");
 				if (arq_geren != NULL)
 				{
 					cadastrar_Item(arq_geren,n);
@@ -132,7 +132,6 @@ int menuGerenItens(int n)
 					puts("Houve um erro ao abrir o cardapio de comidas.");
 				}
 				scape2 = 1;
-				//Cadastrar Comidas
 			}
 		}
 		else if((strcmp(gerenc, "Editar") == 0) || (strcmp(gerenc, "editar")) == 0)
@@ -190,48 +189,51 @@ int menuGerenItens(int n)
 }
 int cadastrar_Item (FILE *arq, int noi)
 {
-	char resp[10];
 	FILE *arq_sis;
-	char buffer[4];
-	char temp[30];
-	int codtemp = 0;
+	char resp[10], buffer[4], temp[30];
+	int codtemp;
 	if (noi == 1)
 		puts("Qual bebida voce deseja cadastrar?");
 	else if (noi == 2)
 		puts("Qual comida voce deseja cadastrar?");
 	scanf("%s",temp);
-	arq_sis = fopen("sistema.txt","r");
-	fread(buffer, 1, 1, arq_sis);
-	fprintf(arq, "%s\n", temp);
-	codtemp = atoi(buffer);
-	codtemp = codtemp + 1;
-	fclose(arq_sis);
-	arq_sis = fopen("sistema.txt","w");
-	fprintf(arq_sis,"%d", codtemp);
-	fclose(arq_sis);
-	fclose(arq);
-	if (noi == 1)
+	arq_sis == fopen("sistema.txt","r");
+	if (arq_sis != NULL)
 	{
-		printf("A bebida %s foi castrada com sucesso\n", temp);
-		puts("");
-		puts("Voce deseja cadastrar outra bebida?");
-	}
-	else if (noi == 2)
-	{
-		printf("A comida %s foi castrada com sucesso\n", temp);
+		fread(buffer, 1, 1, arq_sis);
+		fprintf(arq, "%s\n", temp);
+		codtemp = atoi(buffer);
+		codtemp = codtemp + 1;
+		fclose(arq_sis);
+		arq_sis = fopen("sistema.txt","w");
+		fprintf(arq_sis,"%d", codtemp);
+		fcloseall();
+		free(arq);
+		if (noi == 1)
+		{
+			printf("A bebida %s foi castrada com sucesso\n", temp);
+			puts("");
+			puts("Voce deseja cadastrar outra bebida?");
+		}
+		else if (noi == 2)
+		{
+			printf("A comida %s foi castrada com sucesso\n", temp);
+			puts("");
+			puts("Voce deseja cadastrar outra comida?");
+		}
 		scanf("%s", resp);
-	}
-	if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
-	{
-		cadastrar_Item(arq, noi);
-	}
-	else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
-	{
-	
-	}
-	else
-	{
-		puts("Digite Sim ou Nao");
+		if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
+		{
+			cadastrar_Item(arq, noi);
+		}
+		else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
+		{
+		
+		}
+		else
+		{
+			puts("Digite Sim ou Nao");
+		}
 	}
 	return 0;
 }
