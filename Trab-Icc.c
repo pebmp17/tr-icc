@@ -8,6 +8,8 @@ int soliConta();
 int cadastrar_Item(FILE *arq, int noi);
 char optmainmenu = ' ';
 
+struct cardapio {int codigo; char nome_Item[30]; float preco;};
+struct cardapio Item_Cardapio;
 int main()
 {
 	puts ("Bem Vindo.");
@@ -109,7 +111,7 @@ int menuGerenItens(int n)
 		{
 			if (n == 1)
 			{
-				arq_geren = fopen ("cardapio_bebidas.txt","w");
+				arq_geren = fopen ("cardapio_bebidas.txt","a");
 				if (arq_geren != NULL)
 				{
 					cadastrar_Item(arq_geren,n);
@@ -118,11 +120,10 @@ int menuGerenItens(int n)
 				{
 					puts("Houve um erro ao abrir o cardapio de bebidas.");
 				}
-				scape2 =1;
 			}
 			else if (n == 2)
 			{
-				arq_geren = fopen ("cardapio_comdas.txt","a");
+				arq_geren = fopen ("cardapio_comidas.txt","a");
 				if (arq_geren != NULL)
 				{
 					cadastrar_Item(arq_geren,n);
@@ -131,19 +132,16 @@ int menuGerenItens(int n)
 				{
 					puts("Houve um erro ao abrir o cardapio de comidas.");
 				}
-				scape2 = 1;
 			}
 		}
 		else if((strcmp(gerenc, "Editar") == 0) || (strcmp(gerenc, "editar")) == 0)
 		{
 			if (n == 1)
 			{
-				scape2 = 1;
 				//Editar bebidas
 			}
 			else if (n == 2)
 			{
-				scape2 = 1;
 				//Editar Comidas
 			}
 		}
@@ -151,12 +149,10 @@ int menuGerenItens(int n)
 		{
 			if (n == 1)
 			{
-				scape2 = 1;
 				//Consultar bebidas
 			}
 			else if (n == 2)
 			{
-				scape2 = 1;
 				//Consultar Comidas
 			}
 		}
@@ -164,12 +160,10 @@ int menuGerenItens(int n)
 		{
 			if (n == 1)
 			{
-				scape2 = 1;
 				//Remover bebidas
 			}
 			else if (n == 2)
 			{
-				scape2 = 1;
 				//Remover Comidas
 			}
 
@@ -190,50 +184,70 @@ int menuGerenItens(int n)
 int cadastrar_Item (FILE *arq, int noi)
 {
 	FILE *arq_sis;
-	char resp[10], buffer[4], temp[30];
-	int codtemp;
+	char resp[30];
+	char spresso[30];
+	int codtemp, codtest;
+	char *tstspreso;
+	float jnkpre;
+	int codigos_cadastrados[codtemp];
 	if (noi == 1)
 		puts("Qual bebida voce deseja cadastrar?");
 	else if (noi == 2)
 		puts("Qual comida voce deseja cadastrar?");
-	scanf("%s",temp);
-	arq_sis == fopen("sistema.txt","r");
-	if (arq_sis != NULL)
+	scanf("%s",Item_Cardapio.nome_Item);
+	arq_sis = fopen("sistema.txt","r");
+	if (arq_sis == NULL)
 	{
-		fread(buffer, 1, 1, arq_sis);
-		fprintf(arq, "%s\n", temp);
-		codtemp = atoi(buffer);
-		codtemp = codtemp + 1;
-		fclose(arq_sis);
-		arq_sis = fopen("sistema.txt","w");
-		fprintf(arq_sis,"%d", codtemp);
-		fcloseall();
-		free(arq);
-		if (noi == 1)
-		{
-			printf("A bebida %s foi castrada com sucesso\n", temp);
-			puts("");
-			puts("Voce deseja cadastrar outra bebida?");
-		}
-		else if (noi == 2)
-		{
-			printf("A comida %s foi castrada com sucesso\n", temp);
-			puts("");
-			puts("Voce deseja cadastrar outra comida?");
-		}
-		scanf("%s", resp);
-		if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
-		{
-			cadastrar_Item(arq, noi);
-		}
-		else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
-		{
-		
-		}
+		exit(0);
+	}
+	fscanf(arq_sis,"%d", &codtemp);
+	fclose(arq_sis);
+	while(true){
+		printf("Qual o preco de %s ?\n", Item_Cardapio.nome_Item);
+		scanf("%s", spresso);
+		if (strtof(spresso, &tstspreso) == 0.0F){
+			puts("Por favor digite um valor valido.");
+		} 
 		else
 		{
-			puts("Digite Sim ou Nao");
+			Item_Cardapio.preco = strtof(spresso, &tstspreso);
+			break;
 		}
+	}
+	while(!feof){
+		fscanf(arq, "%d %s %f",&codtest, spresso, &jnkpre);
+	}
+	fprintf(arq, "%s R$ %.2f\n", Item_Cardapio.nome_Item, Item_Cardapio.preco);
+	codtemp = codtemp + 1;
+	arq_sis = fopen("sistema.txt","w");
+	fprintf(arq_sis,"%d", codtemp);
+	fclose(arq);
+	fclose(arq_sis);
+	if (noi == 1)
+	{
+		printf("A bebida %s foi castrada com sucesso\n", Item_Cardapio.nome_Item);
+		puts("");
+		puts("Voce deseja cadastrar outra bebida?");
+	}
+	else if (noi == 2)
+	{
+		printf("A comida %s foi castrada com sucesso\n", Item_Cardapio.nome_Item);
+		puts("");
+		puts("Voce deseja cadastrar outra comida?");
+	}
+	scanf("%s", resp);
+	if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
+	{
+		cadastrar_Item(arq, noi);
+	}
+	else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
+	{
+		
+	}
+	else
+	{
+		puts("Digite Sim ou Nao");
+		cadastrar_Item (arq,noi);
 	}
 	return 0;
 }
