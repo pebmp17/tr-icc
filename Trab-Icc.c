@@ -184,25 +184,16 @@ int menuGerenItens(int n)
 int cadastrar_Item (FILE *arq, int noi)
 {
 	FILE *arq_sis;
-	char resp[30];
-	char spresso[30];
-	int codtemp, codtest;
+	char resp[10];
+	char spresso[10];
+	int codnumBebi = 0, codnumComi = 0;
 	char *tstspreso;
-	float jnkpre;
-	int codigos_cadastrados[codtemp];
 	if (noi == 1)
 		puts("Qual bebida voce deseja cadastrar?");
 	else if (noi == 2)
 		puts("Qual comida voce deseja cadastrar?");
 	scanf("%s",Item_Cardapio.nome_Item);
-	arq_sis = fopen("sistema.txt","r");
-	if (arq_sis == NULL)
-	{
-		exit(0);
-	}
-	fscanf(arq_sis,"%d", &codtemp);
-	fclose(arq_sis);
-	while(true){
+	while(codnumBebi == 0){
 		printf("Qual o preco de %s ?\n", Item_Cardapio.nome_Item);
 		scanf("%s", spresso);
 		if (strtof(spresso, &tstspreso) == 0.0F){
@@ -214,14 +205,27 @@ int cadastrar_Item (FILE *arq, int noi)
 			break;
 		}
 	}
-	while(!feof){
-		fscanf(arq, "%d %s %f",&codtest, spresso, &jnkpre);
+	arq_sis = fopen("sistema.txt","r");
+	if (arq_sis == NULL)
+	{
+		puts("Arquivo sistema.txt não encontrado.\nFinalizando Programa.");
+		exit(0);
 	}
-	fprintf(arq, "%s R$ %.2f\n", Item_Cardapio.nome_Item, Item_Cardapio.preco);
-	codtemp = codtemp + 1;
+	fscanf(arq_sis,"%d %d", &codnumBebi, &codnumComi);
+	fclose(arq_sis);
+	if (noi == 1)
+	{
+		Item_Cardapio.codigo = codnumBebi;
+		codnumBebi = codnumBebi + 1;
+	}
+	else if (noi == 2)
+	{
+		Item_Cardapio.codigo = codnumComi;
+		codnumComi = codnumComi + 1;
+	}
+	fprintf(arq, "%d %s R$ %.2f\n",Item_Cardapio.codigo, Item_Cardapio.nome_Item, Item_Cardapio.preco);
 	arq_sis = fopen("sistema.txt","w");
-	fprintf(arq_sis,"%d", codtemp);
-	fclose(arq);
+	fprintf(arq_sis,"%d %d", codnumBebi, codnumComi);
 	fclose(arq_sis);
 	if (noi == 1)
 	{
@@ -242,7 +246,7 @@ int cadastrar_Item (FILE *arq, int noi)
 	}
 	else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
 	{
-		
+		fclose(arq);
 	}
 	else
 	{
