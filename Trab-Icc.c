@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 int mGerenCard();
 int mkPedido();
@@ -8,11 +9,19 @@ int soliConta();
 int cadastrar_Item(FILE *arq, int noi);
 int consultar_Item(FILE *arq, int noi);
 char optmainmenu = ' ';
+FILE *arq_sis;
 
 struct cardapio {int codigo; char nome_Item[30]; float preco;};
 struct cardapio Item_Cardapio;
 int main()
 {
+	puts("Checando Arquivo de Sistema...");
+	if(access("sistema.txt",R_OK) == -1){
+		arq_sis = fopen ("sistema.txt","w");
+		fprintf(arq_sis, "1 1");
+		fclose(arq_sis);
+	}
+	system("clear");
 	puts ("Bem Vindo.");
 	puts ("Qual opcao voce deseja usar?");
 	puts ("1. Gerenciar itens do cardapio");
@@ -40,7 +49,6 @@ int main()
 		else if (optmainmenu == '4'){
 			puts ("Opcao escolhida: 4.Sair do Sistema");
 			optmainmenu = ' ';
-			return 0;
 		}
 		else{
 			puts("Opcao Invalida");
@@ -203,7 +211,6 @@ int menuGerenItens(int n)
 
 int cadastrar_Item (FILE *arq, int noi)
 {
-	FILE *arq_sis;
 	char resp[10];
 	char spresso[10];
 	int codnumBebi = 0, codnumComi = 0;
@@ -226,11 +233,6 @@ int cadastrar_Item (FILE *arq, int noi)
 		}
 	}
 	arq_sis = fopen("sistema.txt","r");
-	if (arq_sis == NULL)
-	{
-		puts("Arquivo sistema.txt não encontrado.\nFinalizando Programa.");
-		exit(0);
-	}
 	fscanf(arq_sis,"%d %d", &codnumBebi, &codnumComi);
 	fclose(arq_sis);
 	if (noi == 1)
