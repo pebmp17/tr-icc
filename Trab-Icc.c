@@ -6,6 +6,7 @@ int mGerenCard();
 int mkPedido();
 int soliConta();
 int cadastrar_Item(FILE *arq, int noi);
+int consultar_Item(FILE *arq, int noi);
 char optmainmenu = ' ';
 
 struct cardapio {int codigo; char nome_Item[30]; float preco;};
@@ -39,6 +40,7 @@ int main()
 		else if (optmainmenu == '4'){
 			puts ("Opcao escolhida: 4.Sair do Sistema");
 			optmainmenu = ' ';
+			return 0;
 		}
 		else{
 			puts("Opcao Invalida");
@@ -149,11 +151,27 @@ int menuGerenItens(int n)
 		{
 			if (n == 1)
 			{
-				//Consultar bebidas
+				arq_geren = fopen ("cardapio_bebidas.txt","r");
+				if (arq_geren != NULL)
+				{
+					consultar_Item(arq_geren,n);
+				}
+				else
+				{
+					puts("Houve um erro ao abrir o cardapio de bebidas.");
+				}
 			}
 			else if (n == 2)
 			{
-				//Consultar Comidas
+				arq_geren = fopen ("cardapio_comidas.txt","r");
+				if (arq_geren != NULL)
+				{
+					consultar_Item(arq_geren,n);
+				}
+				else
+				{
+					puts("Houve um erro ao abrir o cardapio de comidas.");
+				}
 			}
 		}
 		else if((strcmp(gerenc, "Remover") == 0) || (strcmp(gerenc, "remover")) == 0)
@@ -181,6 +199,8 @@ int menuGerenItens(int n)
 	}
 	return 0;
 }
+
+
 int cadastrar_Item (FILE *arq, int noi)
 {
 	FILE *arq_sis;
@@ -252,6 +272,40 @@ int cadastrar_Item (FILE *arq, int noi)
 	{
 		puts("Digite Sim ou Nao");
 		cadastrar_Item (arq,noi);
+	}
+	return 0;
+}
+
+int consultar_Item (FILE *arq, int noi)
+{
+	char resp[10], consult[30];
+	if (noi == 1)
+		puts("Qual bebida voce deseja consultar?");
+	else if (noi == 2)
+		puts("Qual comida voce deseja consultar?");
+	scanf("%s",consult);
+	fscanf(arq, "%d %s R$ %f\n",&Item_Cardapio.codigo, Item_Cardapio.nome_Item, &Item_Cardapio.preco);
+	if (noi == 1)
+	{
+		puts("Voce deseja consultar outra bebida?");
+	}
+	else if (noi == 2)
+	{
+		puts("Voce deseja consultar outra comida?");
+	}
+	scanf("%s", resp);
+	if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
+	{
+		cadastrar_Item(arq, noi);
+	}
+	else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
+	{
+		fclose(arq);
+	}
+	else
+	{
+		puts("Digite Sim ou Nao");
+		consultar_Item (arq,noi);
 	}
 	return 0;
 }
