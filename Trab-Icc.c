@@ -11,18 +11,25 @@ int consultar_Item(FILE *arq, int noi);
 int editar_Item(FILE *arq, int noi);
 int remover_Item(FILE *arq, int noi);
 
-char optmainmenu = ' ';
 FILE *arq_sis;
+FILE *arq_idMax;
+char optmainmenu = ' ';
 
 struct cardapio {int codigo;char id;char nome_Item[30]; float preco;};
+struct pedido {int int_cod;char id_cod;};
 struct cardapio Item_Cardapio;
+
 int main()
 {
 	if(access("sistema.txt",R_OK) == -1){
 		arq_sis = fopen ("sistema.txt","w");
 		fprintf(arq_sis, "1 1");
 		fclose(arq_sis);
-		system("clear");
+	}
+	if(access("idMesas",R_OK) == -1){
+		arq_idMax = fopen ("idMesas.txt","w");
+		fprintf(arq_idMax, "1");
+		fclose(arq_idMax);
 	}
 	puts ("Bem Vindo.");
 	puts ("Qual opcao voce deseja usar?");
@@ -506,38 +513,56 @@ int remover_Item (FILE *arq, int noi)
 
 int mkPedido()
 {
+	struct pedido pedido_client;
 	FILE *arq_com;
 	FILE *arq_bebi;
+	char tstcod[10];
 	struct cardapio ItemCard;
-	arq_bebi = fopen ("cardapio_bebidas.bin","r");
-	if (arq_bebi == NULL)
+	int idMesas;
+	arq_idMax = fopen("idMesas.txt","r");
+	fscanf(arq_idMax,"%d", &idMesas);
+	fclose(arq_idMax);
+	while (true)
 	{
-		puts("Nenhuma Bebida foi cadastrada");
-	}
-	else
-	{
-		puts("Bebidas Disponíveis:");
-		while (!feof(arq_bebi))
+		arq_bebi = fopen ("cardapio_bebidas.bin","r");
+		if (arq_bebi == NULL)
 		{
-			fread(&ItemCard, sizeof(struct cardapio), 1, arq_bebi);
-			printf("%d%c %s R$:%.2f\n",ItemCard.codigo, ItemCard.id, ItemCard.nome_Item, ItemCard.preco);
+			puts("Nenhuma Bebida foi cadastrada");
 		}
-	}
-	puts(" ");
-	arq_com = fopen ("cardapio_comidas.bin","r");
-	if (arq_com == NULL)
-	{
-		puts("Nenhuma Comida foi cadastrada");
-	}
-	else
-	{
-		puts("Comidas Disponíveis:");
-		while (!feof(arq_com))
+		else
 		{
-			fread(&ItemCard, sizeof(struct cardapio), 1, arq_com);
-			printf("%d%c %s R$:%.2f\n",ItemCard.codigo, ItemCard.id, ItemCard.nome_Item, ItemCard.preco);
+			puts("Bebidas Disponíveis:");
+			while (!feof(arq_bebi))
+			{
+				fread(&ItemCard, sizeof(struct cardapio), 1, arq_bebi);
+				printf("%d%c %s R$:%.2f\n",ItemCard.codigo, ItemCard.id, ItemCard.nome_Item, ItemCard.preco);
+			}
 		}
+		puts(" ");
+		arq_com = fopen ("cardapio_comidas.bin","r");
+		if (arq_com == NULL)
+		{
+			puts("Nenhuma Comida foi cadastrada");
+		}
+		else
+		{
+			puts("Comidas Disponíveis:");
+			while (!feof(arq_com))
+			{
+				fread(&ItemCard, sizeof(struct cardapio), 1, arq_com);
+				if (ItemCard.codigo != 0)
+				{
+					printf("%d%c %s R$:%.2f\n",ItemCard.codigo, ItemCard.id, ItemCard.nome_Item, ItemCard.preco);
+				}
+			}
+		}
+		puts("Digite o codigo do que deseja pedir.");
+		scanf("%s%c", &tstcod,&pedido_client.id_cod);
 	}
+	idMesas = idMesas +1;
+	arq_idMax = fopen("idMesas.txt","w");
+	fprintf(arq_sis,"%d", idMesas);
+	fclose(arq_sis);
 	main();
 	return 0;
 }
