@@ -8,6 +8,9 @@ int mkPedido();
 int soliConta();
 int cadastrar_Item(FILE *arq, int noi);
 int consultar_Item(FILE *arq, int noi);
+int editar_Item(FILE *arq, int noi);
+int remover_Item(FILE *arq, int noi);
+
 char optmainmenu = ' ';
 FILE *arq_sis;
 
@@ -148,18 +151,34 @@ int menuGerenItens(int n)
 		{
 			if (n == 1)
 			{
-				//Editar bebidas
+				arq_geren = fopen ("cardapio_bebidas.bin","w+b");
+				if (arq_geren != NULL)
+				{
+					editar_Item(arq_geren,n);
+				}
+				else
+				{
+					puts("Houve um erro ao abrir o cardapio de bebidas.");
+				}
 			}
 			else if (n == 2)
 			{
-				//Editar Comidas
+				arq_geren = fopen ("cardapio_comidas.bin","w+b");
+				if (arq_geren != NULL)
+				{
+					editar_Item(arq_geren,n);
+				}
+				else
+				{
+					puts("Houve um erro ao abrir o cardapio de comidas.");
+				}
 			}
 		}
 		else if((strcmp(gerenc, "Consultar") == 0) || (strcmp(gerenc, "consultar")) == 0)
 		{
 			if (n == 1)
 			{
-				arq_geren = fopen ("cardapio_bebidas.txt","r");
+				arq_geren = fopen ("cardapio_bebidas.bin","rb");
 				if (arq_geren != NULL)
 				{
 					consultar_Item(arq_geren,n);
@@ -171,7 +190,7 @@ int menuGerenItens(int n)
 			}
 			else if (n == 2)
 			{
-				arq_geren = fopen ("cardapio_comidas.txt","r");
+				arq_geren = fopen ("cardapio_comidas.bin","rb");
 				if (arq_geren != NULL)
 				{
 					consultar_Item(arq_geren,n);
@@ -186,11 +205,27 @@ int menuGerenItens(int n)
 		{
 			if (n == 1)
 			{
-				//Remover bebidas
+				arq_geren = fopen ("cardapio_bebidas.bin","w+b");
+				if (arq_geren != NULL)
+				{
+					remover_Item(arq_geren,n);
+				}
+				else
+				{
+					puts("Houve um erro ao abrir o cardapio de bebidas.");
+				}
 			}
 			else if (n == 2)
 			{
-				//Remover Comidas
+				arq_geren = fopen ("cardapio_comidas.bin","w+b");
+				if (arq_geren != NULL)
+				{
+					remover_Item(arq_geren,n);
+				}
+				else
+				{
+					puts("Houve um erro ao abrir o cardapio de comidas.");
+				}
 			}
 
 		}
@@ -290,13 +325,14 @@ int consultar_Item (FILE *arq, int noi)
 	else if (noi == 2)
 		puts("Qual comida voce deseja consultar?");
 	scanf("%s",consult);
-	while ((!feof) && (find == 0))
+	while ((!feof(arq)) && (find == 0))
 	{
 		fread(&ItemTemp, sizeof(struct cardapio), 1, arq);
 		if (strcmp(Item_Cardapio.nome_Item, ItemTemp.nome_Item) == 0)
 		{
 			printf("Informacoes do Item %s:\n", ItemTemp.nome_Item);
 			printf("%d%c %s R$:%f\n",ItemTemp.codigo, ItemTemp.id, ItemTemp.nome_Item, ItemTemp.preco);
+			find = 1;
 		}
 	}
 	if(find == 0)
@@ -324,6 +360,142 @@ int consultar_Item (FILE *arq, int noi)
 	{
 		puts("Digite Sim ou Nao");
 		consultar_Item (arq,noi);
+	}
+	return 0;
+}
+
+int editar_Item (FILE *arq, int noi)
+{
+	struct cardapio ItemTemp;
+	char resp[10], consult[30], spresso[10];
+	int find = 0;
+	char *tstspreso;
+	if (noi == 1)
+		puts("Qual bebida voce deseja editar?");
+	else if (noi == 2)
+		puts("Qual comida voce deseja editar?");
+	scanf("%s",consult);
+	while ((!feof(arq)) && (find == 0))
+	{
+		fread(&ItemTemp, sizeof(struct cardapio), 1, arq);
+		if (strcmp(Item_Cardapio.nome_Item, ItemTemp.nome_Item) == 0)
+		{
+			printf("Informacoes do Item %s:\n", ItemTemp.nome_Item);
+			printf("%d%c %s R$:%f\n",ItemTemp.codigo, ItemTemp.id, ItemTemp.nome_Item, ItemTemp.preco);
+			while(true)
+			{
+				printf("Digite o novo preco de %s\n", ItemTemp.nome_Item);
+				scanf("%s", spresso);
+				if (strtof(spresso, &tstspreso) == 0.0F){
+					puts("Por favor digite um valor valido.");
+				} 
+				else
+				{
+					ItemTemp.preco = strtof(spresso, &tstspreso);
+					fseek(arq, - sizeof(struct cardapio), SEEK_CUR);
+					fwrite(&ItemTemp, sizeof(struct cardapio), 1, arq);
+					break;
+				}
+			}
+			find = 1;
+		}
+	}
+	if(find == 0)
+	{
+		puts("Item não encontrado");
+	}
+	if (noi == 1)
+	{
+		puts("Voce deseja editar outra bebida?");
+	}
+	else if (noi == 2)
+	{
+		puts("Voce deseja editar outra comida?");
+	}
+	scanf("%s", resp);
+	if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
+	{
+		editar_Item(arq, noi);
+	}
+	else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
+	{
+		fclose(arq);
+	}
+	else
+	{
+		puts("Digite Sim ou Nao");
+		editar_Item (arq,noi);
+	}
+	return 0;
+}
+
+int remover_Item (FILE *arq, int noi)
+{
+	struct cardapio ItemTemp;
+	char resp[10];
+	char consult [30];
+	int find = 0;
+	if (noi == 1)
+		puts("Qual bebida voce deseja remover?");
+	else if (noi == 2)
+		puts("Qual comida voce deseja remover?");
+	scanf("%s",consult);
+	while ((!feof(arq)) && (find == 0))
+	{
+		fread(&ItemTemp, sizeof(struct cardapio), 1, arq);
+		if (strcmp(ItemTemp.nome_Item, consult) == 0)
+		{
+			printf("Informacoes do Item %s:\n", ItemTemp.nome_Item);
+			printf("%d%c %s R$:%f\n",ItemTemp.codigo, ItemTemp.id, ItemTemp.nome_Item, ItemTemp.preco);
+			while(true){
+				printf("Voce realmente deseja remover %s", ItemTemp.nome_Item);
+				scanf("%s", resp);
+				if ((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
+				{
+					ItemTemp.codigo = 0;
+					ItemTemp.id = ' ';
+					ItemTemp.nome_Item[0] = 0;
+					ItemTemp.preco = 0.0;
+					fseek(arq, - sizeof(struct cardapio), SEEK_CUR);
+					fwrite(&ItemTemp, sizeof(struct cardapio), 1, arq);
+					printf("%s foi removido com sucesso\n", ItemTemp.nome_Item);
+				}
+				else if ((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
+				{
+				}
+				else
+				{
+					puts("Digite Sim ou Nao");
+				}
+				find = 1;
+			}
+		}
+	}
+	if(find == 0)
+	{
+		puts("Item não encontrado");
+	}
+	if (noi == 1)
+	{
+		puts("Voce deseja remover outra bebida?");
+	}
+	else if (noi == 2)
+	{
+		puts("Voce deseja remover outra comida?");
+	}
+	scanf("%s", resp);
+	if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
+	{
+		remover_Item(arq, noi);
+	}
+	else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
+	{
+		fclose(arq);
+	}
+	else
+	{
+		puts("Digite Sim ou Nao");
+		remover_Item (arq,noi);
 	}
 	return 0;
 }
