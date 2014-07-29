@@ -11,7 +11,7 @@ int consultar_Item(FILE *arq, int noi);
 char optmainmenu = ' ';
 FILE *arq_sis;
 
-struct cardapio {int codigo; char nome_Item[30]; float preco;};
+struct cardapio {int codigo;char id;char nome_Item[30]; float preco;};
 struct cardapio Item_Cardapio;
 int main()
 {
@@ -121,7 +121,7 @@ int menuGerenItens(int n)
 		{
 			if (n == 1)
 			{
-				arq_geren = fopen ("cardapio_bebidas.txt","a");
+				arq_geren = fopen ("cardapio_bebidas.bin","ab");
 				if (arq_geren != NULL)
 				{
 					cadastrar_Item(arq_geren,n);
@@ -133,7 +133,7 @@ int menuGerenItens(int n)
 			}
 			else if (n == 2)
 			{
-				arq_geren = fopen ("cardapio_comidas.txt","a");
+				arq_geren = fopen ("cardapio_comidas.bin","ab");
 				if (arq_geren != NULL)
 				{
 					cadastrar_Item(arq_geren,n);
@@ -239,13 +239,15 @@ int cadastrar_Item (FILE *arq, int noi)
 	{
 		Item_Cardapio.codigo = codnumBebi;
 		codnumBebi = codnumBebi + 1;
+		Item_Cardapio.id = 'b';
 	}
 	else if (noi == 2)
 	{
 		Item_Cardapio.codigo = codnumComi;
 		codnumComi = codnumComi + 1;
+		Item_Cardapio.id = 'c';
 	}
-	fprintf(arq, "%d %s R$ %.2f\n",Item_Cardapio.codigo, Item_Cardapio.nome_Item, Item_Cardapio.preco);
+	fwrite(&Item_Cardapio, sizeof(struct cardapio), 1, arq);
 	arq_sis = fopen("sistema.txt","w");
 	fprintf(arq_sis,"%d %d", codnumBebi, codnumComi);
 	fclose(arq_sis);
@@ -280,13 +282,27 @@ int cadastrar_Item (FILE *arq, int noi)
 
 int consultar_Item (FILE *arq, int noi)
 {
+	struct cardapio ItemTemp;
 	char resp[10], consult[30];
+	int find = 0;
 	if (noi == 1)
 		puts("Qual bebida voce deseja consultar?");
 	else if (noi == 2)
 		puts("Qual comida voce deseja consultar?");
 	scanf("%s",consult);
-	fscanf(arq, "%d %s R$ %f\n",&Item_Cardapio.codigo, Item_Cardapio.nome_Item, &Item_Cardapio.preco);
+	while ((!feof) && (find == 0))
+	{
+		fread(&ItemTemp, sizeof(struct cardapio), 1, arq);
+		if (strcmp(Item_Cardapio.nome_Item, ItemTemp.nome_Item) == 0)
+		{
+			printf("Informacoes do Item %s:\n", ItemTemp.nome_Item);
+			printf("%d%c %s R$:%f\n",ItemTemp.codigo, ItemTemp.id, ItemTemp.nome_Item, ItemTemp.preco);
+		}
+	}
+	if(find == 0)
+	{
+		puts("Item não encontrado");
+	}
 	if (noi == 1)
 	{
 		puts("Voce deseja consultar outra bebida?");
