@@ -516,7 +516,7 @@ int mkPedido()
 	struct pedido pedido_client;
 	FILE *arq_com;
 	FILE *arq_bebi;
-	char tstcod[10];
+	char resp[10];
 	struct cardapio ItemCard;
 	int idMesas;
 	arq_idMax = fopen("idMesas.txt","r");
@@ -552,12 +552,31 @@ int mkPedido()
 				fread(&ItemCard, sizeof(struct cardapio), 1, arq_com);
 				if (ItemCard.codigo != 0)
 				{
-					printf("%d%c %s R$:%.2f\n",ItemCard.codigo, ItemCard.id, ItemCard.nome_Item, ItemCard.preco);
+					printf("%d %s R$:%.2f\n",ItemCard.codigo, ItemCard.nome_Item, ItemCard.preco);
 				}
 			}
 		}
-		puts("Digite o codigo do que deseja pedir.");
-		scanf("%s%c", &tstcod,&pedido_client.id_cod);
+		while (true)
+		{
+			puts("Voce deseja pedir Comidas ou Bebidas.");
+			scanf("%s",resp);
+			if ((strcmp(resp, "Bebidas") == 0) || (strcmp(resp, "bebidas") == 0))
+			{
+				pedido_client.id_cod = 'b';
+				break;
+			}
+			else if ((strcmp(resp, "Comidas") == 0) || (strcmp(resp, "comidas") == 0))
+	 		{
+				pedido_client.id_cod = 'c';
+				break;
+			}
+			else
+			{
+				puts ("So e possivel pedir comidas ou bebidas")
+			}
+		}
+		puts("Digite o codigo do item");
+		//scanf
 	}
 	idMesas = idMesas +1;
 	arq_idMax = fopen("idMesas.txt","w");
