@@ -18,13 +18,12 @@ struct cardapio {int codigo;char id;char nome_Item[30]; float preco;};
 struct cardapio Item_Cardapio;
 int main()
 {
-	puts("Checando Arquivo de Sistema...");
 	if(access("sistema.txt",R_OK) == -1){
 		arq_sis = fopen ("sistema.txt","w");
 		fprintf(arq_sis, "1 1");
 		fclose(arq_sis);
+		system("clear");
 	}
-	system("clear");
 	puts ("Bem Vindo.");
 	puts ("Qual opcao voce deseja usar?");
 	puts ("1. Gerenciar itens do cardapio");
@@ -44,10 +43,12 @@ int main()
 		else if(optmainmenu == '2'){
 			puts("Opcao escolhida: 2.Fazer um Pedido");
 			mkPedido();
+			break;
 			}
 		else if (optmainmenu == '3'){
 			puts ("Opcao escolhida: 3.Solicitar Conta");
 			soliConta();
+			break;
 		}
 		else if (optmainmenu == '4'){
 			puts ("Opcao escolhida: 4.Sair do Sistema");
@@ -151,7 +152,7 @@ int menuGerenItens(int n)
 		{
 			if (n == 1)
 			{
-				arq_geren = fopen ("cardapio_bebidas.bin","w+b");
+				arq_geren = fopen ("cardapio_bebidas.bin","r+b");
 				if (arq_geren != NULL)
 				{
 					editar_Item(arq_geren,n);
@@ -163,7 +164,7 @@ int menuGerenItens(int n)
 			}
 			else if (n == 2)
 			{
-				arq_geren = fopen ("cardapio_comidas.bin","w+b");
+				arq_geren = fopen ("cardapio_comidas.bin","r+b");
 				if (arq_geren != NULL)
 				{
 					editar_Item(arq_geren,n);
@@ -205,7 +206,7 @@ int menuGerenItens(int n)
 		{
 			if (n == 1)
 			{
-				arq_geren = fopen ("cardapio_bebidas.bin","w+b");
+				arq_geren = fopen ("cardapio_bebidas.bin","r+b");
 				if (arq_geren != NULL)
 				{
 					remover_Item(arq_geren,n);
@@ -217,7 +218,7 @@ int menuGerenItens(int n)
 			}
 			else if (n == 2)
 			{
-				arq_geren = fopen ("cardapio_comidas.bin","w+b");
+				arq_geren = fopen ("cardapio_comidas.bin","r+b");
 				if (arq_geren != NULL)
 				{
 					remover_Item(arq_geren,n);
@@ -325,13 +326,14 @@ int consultar_Item (FILE *arq, int noi)
 	else if (noi == 2)
 		puts("Qual comida voce deseja consultar?");
 	scanf("%s",consult);
+	rewind(arq);
 	while ((!feof(arq)) && (find == 0))
 	{
 		fread(&ItemTemp, sizeof(struct cardapio), 1, arq);
-		if (strcmp(Item_Cardapio.nome_Item, ItemTemp.nome_Item) == 0)
+		if (strcmp(ItemTemp.nome_Item, consult) == 0)
 		{
 			printf("Informacoes do Item %s:\n", ItemTemp.nome_Item);
-			printf("%d%c %s R$:%f\n",ItemTemp.codigo, ItemTemp.id, ItemTemp.nome_Item, ItemTemp.preco);
+			printf("%d%c %s R$:%.2f\n",ItemTemp.codigo, ItemTemp.id, ItemTemp.nome_Item, ItemTemp.preco);
 			find = 1;
 		}
 	}
@@ -350,7 +352,7 @@ int consultar_Item (FILE *arq, int noi)
 	scanf("%s", resp);
 	if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
 	{
-		cadastrar_Item(arq, noi);
+		consultar_Item(arq, noi);
 	}
 	else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
 	{
@@ -378,10 +380,10 @@ int editar_Item (FILE *arq, int noi)
 	while ((!feof(arq)) && (find == 0))
 	{
 		fread(&ItemTemp, sizeof(struct cardapio), 1, arq);
-		if (strcmp(Item_Cardapio.nome_Item, ItemTemp.nome_Item) == 0)
+		if (strcmp(ItemTemp.nome_Item, consult) == 0)
 		{
 			printf("Informacoes do Item %s:\n", ItemTemp.nome_Item);
-			printf("%d%c %s R$:%f\n",ItemTemp.codigo, ItemTemp.id, ItemTemp.nome_Item, ItemTemp.preco);
+			printf("%d%c %s R$:%.2f\n",ItemTemp.codigo, ItemTemp.id, ItemTemp.nome_Item, ItemTemp.preco);
 			while(true)
 			{
 				printf("Digite o novo preco de %s\n", ItemTemp.nome_Item);
@@ -448,7 +450,7 @@ int remover_Item (FILE *arq, int noi)
 			printf("Informacoes do Item %s:\n", ItemTemp.nome_Item);
 			printf("%d%c %s R$:%f\n",ItemTemp.codigo, ItemTemp.id, ItemTemp.nome_Item, ItemTemp.preco);
 			while(true){
-				printf("Voce realmente deseja remover %s", ItemTemp.nome_Item);
+				printf("Voce realmente deseja remover %s\n", ItemTemp.nome_Item);
 				scanf("%s", resp);
 				if ((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
 				{
@@ -456,18 +458,20 @@ int remover_Item (FILE *arq, int noi)
 					ItemTemp.id = ' ';
 					ItemTemp.nome_Item[0] = 0;
 					ItemTemp.preco = 0.0;
-					fseek(arq, - sizeof(struct cardapio), SEEK_CUR);
+					fseek(arq, -sizeof(struct cardapio), SEEK_CUR);
 					fwrite(&ItemTemp, sizeof(struct cardapio), 1, arq);
-					printf("%s foi removido com sucesso\n", ItemTemp.nome_Item);
+					printf("%s foi removido com sucesso\n", consult);
+					find = 1;
+					break;
 				}
 				else if ((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
 				{
+					break;
 				}
 				else
 				{
 					puts("Digite Sim ou Nao");
 				}
-				find = 1;
 			}
 		}
 	}
@@ -502,8 +506,42 @@ int remover_Item (FILE *arq, int noi)
 
 int mkPedido()
 {
+	FILE *arq_com;
+	FILE *arq_bebi;
+	struct cardapio ItemCard;
+	arq_bebi = fopen ("cardapio_bebidas.bin","r");
+	if (arq_bebi == NULL)
+	{
+		puts("Nenhuma Bebida foi cadastrada");
+	}
+	else
+	{
+		puts("Bebidas Disponíveis:");
+		while (!feof(arq_bebi))
+		{
+			fread(&ItemCard, sizeof(struct cardapio), 1, arq_bebi);
+			printf("%d%c %s R$:%.2f\n",ItemCard.codigo, ItemCard.id, ItemCard.nome_Item, ItemCard.preco);
+		}
+	}
+	puts(" ");
+	arq_com = fopen ("cardapio_comidas.bin","r");
+	if (arq_com == NULL)
+	{
+		puts("Nenhuma Comida foi cadastrada");
+	}
+	else
+	{
+		puts("Comidas Disponíveis:");
+		while (!feof(arq_com))
+		{
+			fread(&ItemCard, sizeof(struct cardapio), 1, arq_com);
+			printf("%d%c %s R$:%.2f\n",ItemCard.codigo, ItemCard.id, ItemCard.nome_Item, ItemCard.preco);
+		}
+	}
+	main();
 	return 0;
 }
+
 int soliConta()
 {
 	return 0;
