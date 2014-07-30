@@ -517,7 +517,7 @@ int mkPedido()
 	FILE *arq_com;
 	FILE *arq_bebi;
 	FILE *arq_mesa;
-	FILE *arqIdsMesa;
+	FILE *arq_idMax;
 	char resp[10],Item_Nome[30];
 	int brek = 0, find = 0;
 	struct mesa
@@ -531,9 +531,9 @@ int mkPedido()
 	struct cardapio ItemCard;
 	struct cardapio ItemTemp;
 
-	arqIdsMesa = fopen("idMesas.txt","r");
-	fscanf(arqIdsMesa,"%d", &MesaN.idMesa);
-	fclose(arqIdsMesa);
+	arq_idMax = fopen("idMesas.txt","r");
+	fscanf(arq_idMax,"%d", &MesaN.idMesa);
+	fclose(arq_idMax);
 	sprintf(MesaN.nomeArquivo,"%s%d%s",MesaN.nome1,MesaN.idMesa,MesaN.nome2);
 	printf("%s\n", MesaN.nomeArquivo);
 
@@ -656,8 +656,8 @@ int mkPedido()
 		}
 	}
 	MesaN.idMesa = MesaN.idMesa +1;
-	arqIdsMesa = fopen("idMesas.txt","w");
-	fprintf(arqIdsMesa,"%d",MesaN.idMesa);
+	arq_idMax = fopen("idMesas.txt","w");
+	fprintf(arq_idMax,"%d",MesaN.idMesa);
 	printf("%d\n", MesaN.idMesa);
 	fcloseall();
 	main();
