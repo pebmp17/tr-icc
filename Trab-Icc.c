@@ -26,7 +26,7 @@ int main()
 		fprintf(arq_sis, "1 1");
 		fclose(arq_sis);
 	}
-	if(access("idMesas",R_OK) == -1){
+	if(access("idMesas.txt",R_OK) == -1){
 		arq_idMax = fopen ("idMesas.txt","w");
 		fprintf(arq_idMax, "1");
 		fclose(arq_idMax);
@@ -516,38 +516,54 @@ int mkPedido()
 	struct pedido pedido_client;
 	FILE *arq_com;
 	FILE *arq_bebi;
-	char resp[10];
+	FILE *arq_mesa;
+	FILE *arqIdsMesa;
+	char resp[10],Item_Nome[30];
+	int brek = 0, find = 0;
+	struct mesa
+	{
+		char nome1[20];
+		int idMesa;
+		char nome2[5];
+		char nomeArquivo[40];
+	};
+	struct mesa MesaN = {"pedido_mesa_", 0, ".bin", " "};
 	struct cardapio ItemCard;
-	int idMesas;
-	arq_idMax = fopen("idMesas.txt","r");
-	fscanf(arq_idMax,"%d", &idMesas);
-	fclose(arq_idMax);
-	while (true)
+	struct cardapio ItemTemp;
+
+	arqIdsMesa = fopen("idMesas.txt","r");
+	fscanf(arqIdsMesa,"%d", &MesaN.idMesa);
+	fclose(arqIdsMesa);
+	sprintf(MesaN.nomeArquivo,"%s%d%s",MesaN.nome1,MesaN.idMesa,MesaN.nome2);
+	printf("%s\n", MesaN.nomeArquivo);
+
+	while (brek == 0)
 	{
 		arq_bebi = fopen ("cardapio_bebidas.bin","r");
 		if (arq_bebi == NULL)
 		{
-			puts("Nenhuma Bebida foi cadastrada");
+			puts("\nNenhuma Bebida foi cadastrada");
 		}
 		else
 		{
 			puts("Bebidas Disponíveis:");
-			while (!feof(arq_bebi))
+			while (feof(arq_bebi) == 0)
 			{
 				fread(&ItemCard, sizeof(struct cardapio), 1, arq_bebi);
 				printf("%d%c %s R$:%.2f\n",ItemCard.codigo, ItemCard.id, ItemCard.nome_Item, ItemCard.preco);
 			}
+			rewind(arq_bebi);
 		}
 		puts(" ");
 		arq_com = fopen ("cardapio_comidas.bin","r");
 		if (arq_com == NULL)
 		{
-			puts("Nenhuma Comida foi cadastrada");
+			puts("Nenhuma Comida foi cadastrada\n");
 		}
 		else
 		{
 			puts("Comidas Disponíveis:");
-			while (!feof(arq_com))
+			while (feof(arq_com) == 0)
 			{
 				fread(&ItemCard, sizeof(struct cardapio), 1, arq_com);
 				if (ItemCard.codigo != 0)
@@ -555,10 +571,12 @@ int mkPedido()
 					printf("%d %s R$:%.2f\n",ItemCard.codigo, ItemCard.nome_Item, ItemCard.preco);
 				}
 			}
+			rewind(arq_com);
+			puts(" ");
 		}
 		while (true)
 		{
-			puts("Voce deseja pedir Comidas ou Bebidas.");
+			puts("Voce deseja pedir Comidas ou Bebidas?");
 			scanf("%s",resp);
 			if ((strcmp(resp, "Bebidas") == 0) || (strcmp(resp, "bebidas") == 0))
 			{
@@ -572,16 +590,76 @@ int mkPedido()
 			}
 			else
 			{
-				puts ("So e possivel pedir comidas ou bebidas")
+				puts ("So e possivel pedir comidas ou bebidas");
 			}
 		}
-		puts("Digite o codigo do item");
-		//scanf
+		puts("Digite o nome do item");
+		scanf("%s", Item_Nome);
+		if (pedido_client.id_cod == 'b')
+		{
+			while ((!feof(arq_bebi)) && (find == 0))
+			{
+				(fread(&ItemTemp, sizeof(struct cardapio), 1, arq_bebi));
+				if ((strcmp(Item_Nome, ItemTemp.nome_Item) == 0))
+				{
+					pedido_client.int_cod = ItemTemp.id;
+					arq_mesa = fopen(MesaN.nomeArquivo,"wb");
+					fwrite(&pedido_client, sizeof(struct pedido), 1, arq_mesa);
+					fclose(arq_mesa);
+					find = 1;
+				}
+			}
+		}
+		else if (pedido_client.id_cod == 'c')
+		{
+			while ((!feof(arq_com)) && (find == 0))
+			{
+				fread(&ItemTemp, sizeof(struct cardapio), 1, arq_com);
+				if ((strcmp(Item_Nome, ItemTemp.nome_Item) == 0))
+				{
+					pedido_client.int_cod = ItemTemp.id;
+					arq_mesa = fopen(MesaN.nomeArquivo,"wb");
+					fwrite(&pedido_client, sizeof(struct pedido), 1, arq_mesa);
+					fclose(arq_mesa);
+					find = 1;
+				}
+			}
+		}
+		if(find == 0)
+		{
+			puts("Item não encontrado");
+		}
+		else if(find == 1)
+		{
+			puts("Pedido cadastrado com sucesso");
+		}
+		while (true)
+		{
+
+			puts("Voce deseja pedir outro item?");
+			scanf("%s",resp);
+			if ((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
+			{
+				break;
+			}
+			else if ((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
+			{
+				printf("Sua mesa é a: %d\n", MesaN.idMesa);
+				printf ("E esta salvo no arquivo %s", MesaN.nomeArquivo);
+				brek = 1;
+				break;
+			}
+			else
+			{
+				puts("Digite Sim ou Nao");
+			}
+		}
 	}
-	idMesas = idMesas +1;
-	arq_idMax = fopen("idMesas.txt","w");
-	fprintf(arq_sis,"%d", idMesas);
-	fclose(arq_sis);
+	MesaN.idMesa = MesaN.idMesa +1;
+	arqIdsMesa = fopen("idMesas.txt","w");
+	fprintf(arqIdsMesa,"%d",MesaN.idMesa);
+	printf("%d\n", MesaN.idMesa);
+	fcloseall();
 	main();
 	return 0;
 }
