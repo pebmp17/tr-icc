@@ -359,6 +359,8 @@ int consultar_Item (FILE *arq, int noi)
 			find = 1;
 		}
 	}
+	find = 0;
+	rewind(arq);
 	if(find == 0)
 	{
 		puts("Item não encontrado");
@@ -429,6 +431,8 @@ int editar_Item (FILE *arq, int noi)
 			find = 1;
 		}
 	}
+	find = 0;
+	rewind(arq);
 	if(find == 0)
 	{
 		puts("Item não encontrado");
@@ -506,6 +510,8 @@ int remover_Item (FILE *arq, int noi)
 			}
 		}
 	}
+	find = 0;
+	rewind(arq);
 	if(find == 0)
 	{
 		puts("Item não encontrado");
