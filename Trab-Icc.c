@@ -17,6 +17,7 @@ char optmainmenu = ' ';
 
 struct cardapio {int codigo;char id;char nome_Item[30]; float preco;};
 struct pedido {int int_cod;char id_cod;};
+struct mesa {char nome1[20];int idMesa;char nome2[5];char nomeArquivo[40];};
 struct cardapio Item_Cardapio;
 
 int main()
@@ -42,17 +43,20 @@ int main()
 	{
 		if (optmainmenu== '1')
 		{
+			system("clear");
 			puts("Opcao escolhida: 1.Gerenciar itens do cardapio");
 			optmainmenu = ' ';
 			mGerenCard();
 			break;
 		}
 		else if(optmainmenu == '2'){
+			system("clear");
 			puts("Opcao escolhida: 2.Fazer um Pedido");
 			mkPedido();
 			break;
 			}
 		else if (optmainmenu == '3'){
+			system("clear");
 			puts ("Opcao escolhida: 3.Solicitar Conta");
 			soliConta();
 			break;
@@ -62,6 +66,7 @@ int main()
 			optmainmenu = ' ';
 		}
 		else{
+			system("clear");
 			puts("Opcao Invalida");
 			puts ("Quais dessas opcoes voce deseja usar?");
 			puts ("1. Gerenciar itens do cardapio");
@@ -86,6 +91,7 @@ int mGerenCard()
 		if((strcmp(bOUc, "Bebidas") == 0) || (strcmp(bOUc, "bebidas")) == 0)
 		{
 			scape = 1;
+			system("clear");
 			puts("\nBebidas");
 			puts("--------");
 			menuGerenItens(1);
@@ -93,6 +99,7 @@ int mGerenCard()
 		else if ((strcmp(bOUc,"Comidas") == 0) || (strcmp(bOUc,"comidas") == 0))
 		{
 			scape = 1;
+			system("clear");
 			puts("\nComidas");
 			puts("--------");
 			menuGerenItens(2);
@@ -105,6 +112,7 @@ int mGerenCard()
 		 }
 		else
 		{
+			system("clear");
 			puts("So e possivel gerenciar Comidas ou Bebidas");
 		}
 	}
@@ -237,7 +245,7 @@ int menuGerenItens(int n)
 			}
 
 		}
-		else if((strcmp(gerenc, "Voltar") == 0) || (strcmp(gerenc, "voltar")) == 0)
+		else if((strcmp(gerenc, "nao") == 0) || (strcmp(gerenc, "Nao")) == 0)
 		{
 			puts("");
 			scape2 = 1;
@@ -298,27 +306,34 @@ int cadastrar_Item (FILE *arq, int noi)
 	{
 		printf("A bebida %s foi castrada com sucesso\n", Item_Cardapio.nome_Item);
 		puts("");
-		puts("Voce deseja cadastrar outra bebida?");
+		
 	}
 	else if (noi == 2)
 	{
 		printf("A comida %s foi castrada com sucesso\n", Item_Cardapio.nome_Item);
 		puts("");
-		puts("Voce deseja cadastrar outra comida?");
 	}
-	scanf("%s", resp);
-	if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
+	while(true)
 	{
-		cadastrar_Item(arq, noi);
-	}
-	else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
-	{
-		fclose(arq);
-	}
-	else
-	{
-		puts("Digite Sim ou Nao");
-		cadastrar_Item (arq,noi);
+		if(noi == 1)
+			puts("Voce deseja cadastrar outra bebida?");
+		else if (noi == 2)
+			puts("Voce deseja cadastrar outra comida?");
+		scanf("%s", resp);
+		if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
+		{
+			cadastrar_Item(arq, noi);
+			break;
+		}
+		else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
+		{
+			fclose(arq);
+			break;
+		}
+		else
+		{
+			puts("Digite Sim ou Nao");
+		}
 	}
 	return 0;
 }
@@ -348,28 +363,33 @@ int consultar_Item (FILE *arq, int noi)
 	{
 		puts("Item não encontrado");
 	}
-	if (noi == 1)
+	while(true)
 	{
-		puts("Voce deseja consultar outra bebida?");
+		if (noi == 1)
+		{
+			puts("Voce deseja consultar outra bebida?");
+		}
+		else if (noi == 2)
+		{
+			puts("Voce deseja consultar outra comida?");
+		}
+		scanf("%s", resp);
+		if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
+		{
+			consultar_Item(arq, noi);
+			break;
+		}
+		else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
+		{
+			fclose(arq);
+			break;
+		}
+		else
+		{
+			puts("Digite Sim ou Nao");
+		}
 	}
-	else if (noi == 2)
-	{
-		puts("Voce deseja consultar outra comida?");
-	}
-	scanf("%s", resp);
-	if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
-	{
-		consultar_Item(arq, noi);
-	}
-	else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
-	{
-		fclose(arq);
-	}
-	else
-	{
-		puts("Digite Sim ou Nao");
-		consultar_Item (arq,noi);
-	}
+	
 	return 0;
 }
 
@@ -413,27 +433,31 @@ int editar_Item (FILE *arq, int noi)
 	{
 		puts("Item não encontrado");
 	}
-	if (noi == 1)
+	while(true)
 	{
-		puts("Voce deseja editar outra bebida?");
-	}
-	else if (noi == 2)
-	{
-		puts("Voce deseja editar outra comida?");
-	}
-	scanf("%s", resp);
-	if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
-	{
-		editar_Item(arq, noi);
-	}
-	else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
-	{
-		fclose(arq);
-	}
-	else
-	{
-		puts("Digite Sim ou Nao");
-		editar_Item (arq,noi);
+		if (noi == 1)
+		{
+			puts("Voce deseja editar outra bebida?");
+		}
+		else if (noi == 2)
+		{
+			puts("Voce deseja editar outra comida?");
+		}
+		scanf("%s", resp);
+		if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
+		{
+			editar_Item(arq, noi);
+			break;
+		}
+		else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
+		{
+			fclose(arq);
+			break;
+		}
+		else
+		{
+			puts("Digite Sim ou Nao");
+		}
 	}
 	return 0;
 }
@@ -486,57 +510,52 @@ int remover_Item (FILE *arq, int noi)
 	{
 		puts("Item não encontrado");
 	}
-	if (noi == 1)
+	while(true)
 	{
-		puts("Voce deseja remover outra bebida?");
-	}
-	else if (noi == 2)
-	{
-		puts("Voce deseja remover outra comida?");
-	}
-	scanf("%s", resp);
-	if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
-	{
-		remover_Item(arq, noi);
-	}
-	else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
-	{
-		fclose(arq);
-	}
-	else
-	{
-		puts("Digite Sim ou Nao");
-		remover_Item (arq,noi);
+		if (noi == 1)
+		{
+			puts("Voce deseja remover outra bebida?");
+		}
+		else if (noi == 2)
+		{
+			puts("Voce deseja remover outra comida?");
+		}
+		scanf("%s", resp);
+		if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
+		{
+			remover_Item(arq, noi);
+			break;
+		}
+		else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
+		{
+			fclose(arq);
+			break;
+		}
+		else
+		{
+			puts("Digite Sim ou Nao");
+		}
 	}
 	return 0;
 }
 
 int mkPedido()
 {
-	struct pedido pedido_client;
 	FILE *arq_com;
 	FILE *arq_bebi;
 	FILE *arq_mesa;
 	FILE *arq_idMax;
 	char resp[10],Item_Nome[30];
 	int brek = 0, find = 0;
-	struct mesa
-	{
-		char nome1[20];
-		int idMesa;
-		char nome2[5];
-		char nomeArquivo[40];
-	};
+
+	struct pedido pedido_client;
 	struct mesa MesaN = {"pedido_mesa_", 0, ".bin", " "};
-	struct cardapio ItemCard;
 	struct cardapio ItemTemp;
 
 	arq_idMax = fopen("idMesas.txt","r");
 	fscanf(arq_idMax,"%d", &MesaN.idMesa);
 	fclose(arq_idMax);
 	sprintf(MesaN.nomeArquivo,"%s%d%s",MesaN.nome1,MesaN.idMesa,MesaN.nome2);
-	printf("%s\n", MesaN.nomeArquivo);
-
 	while (brek == 0)
 	{
 		arq_bebi = fopen ("cardapio_bebidas.bin","r");
@@ -546,11 +565,14 @@ int mkPedido()
 		}
 		else
 		{
+			system("clear");
+			puts("Cardapio");
+			puts("---------");
 			puts("Bebidas Disponíveis:");
 			while (feof(arq_bebi) == 0)
 			{
-				fread(&ItemCard, sizeof(struct cardapio), 1, arq_bebi);
-				printf("%d%c %s R$:%.2f\n",ItemCard.codigo, ItemCard.id, ItemCard.nome_Item, ItemCard.preco);
+				fread(&ItemTemp, sizeof(struct cardapio), 1, arq_bebi);
+				printf("%d %s R$:%.2f\n",ItemTemp.codigo, ItemTemp.nome_Item, ItemTemp.preco);
 			}
 			rewind(arq_bebi);
 		}
@@ -565,10 +587,10 @@ int mkPedido()
 			puts("Comidas Disponíveis:");
 			while (feof(arq_com) == 0)
 			{
-				fread(&ItemCard, sizeof(struct cardapio), 1, arq_com);
-				if (ItemCard.codigo != 0)
+				fread(&ItemTemp, sizeof(struct cardapio), 1, arq_com);
+				if (ItemTemp.codigo != 0)
 				{
-					printf("%d %s R$:%.2f\n",ItemCard.codigo, ItemCard.nome_Item, ItemCard.preco);
+					printf("%d %s R$:%.2f\n",ItemTemp.codigo, ItemTemp.nome_Item, ItemTemp.preco);
 				}
 			}
 			rewind(arq_com);
@@ -602,9 +624,10 @@ int mkPedido()
 				(fread(&ItemTemp, sizeof(struct cardapio), 1, arq_bebi));
 				if ((strcmp(Item_Nome, ItemTemp.nome_Item) == 0))
 				{
-					pedido_client.int_cod = ItemTemp.id;
-					arq_mesa = fopen(MesaN.nomeArquivo,"wb");
+					pedido_client.int_cod = ItemTemp.codigo;
+					arq_mesa = fopen(MesaN.nomeArquivo,"ab");
 					fwrite(&pedido_client, sizeof(struct pedido), 1, arq_mesa);
+					printf("%d%c\n", pedido_client.int_cod, pedido_client.id_cod);
 					fclose(arq_mesa);
 					find = 1;
 				}
@@ -617,9 +640,10 @@ int mkPedido()
 				fread(&ItemTemp, sizeof(struct cardapio), 1, arq_com);
 				if ((strcmp(Item_Nome, ItemTemp.nome_Item) == 0))
 				{
-					pedido_client.int_cod = ItemTemp.id;
-					arq_mesa = fopen(MesaN.nomeArquivo,"wb");
+					pedido_client.int_cod = ItemTemp.codigo;
+					arq_mesa = fopen(MesaN.nomeArquivo,"ab");
 					fwrite(&pedido_client, sizeof(struct pedido), 1, arq_mesa);
+					printf("%d%c\n", pedido_client.int_cod, pedido_client.id_cod);
 					fclose(arq_mesa);
 					find = 1;
 				}
@@ -633,6 +657,9 @@ int mkPedido()
 		{
 			puts("Pedido cadastrado com sucesso");
 		}
+		rewind(arq_bebi);
+		rewind(arq_com);
+		find = 0;
 		while (true)
 		{
 
@@ -644,8 +671,9 @@ int mkPedido()
 			}
 			else if ((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
 			{
-				printf("Sua mesa é a: %d\n", MesaN.idMesa);
-				printf ("E esta salvo no arquivo %s", MesaN.nomeArquivo);
+				system("clear");
+				printf("Sua mesa é a: %d ", MesaN.idMesa);
+				printf ("e seu pedido esta salvo no arquivo %s\n", MesaN.nomeArquivo);
 				brek = 1;
 				break;
 			}
@@ -655,16 +683,111 @@ int mkPedido()
 			}
 		}
 	}
+	system("sleep 4");
 	MesaN.idMesa = MesaN.idMesa +1;
 	arq_idMax = fopen("idMesas.txt","w");
 	fprintf(arq_idMax,"%d",MesaN.idMesa);
-	printf("%d\n", MesaN.idMesa);
 	fcloseall();
+	system("clear");
 	main();
 	return 0;
 }
 
 int soliConta()
 {
+	FILE *arq_com;
+	FILE *arq_bebi;
+	FILE *arq_mesa;
+	char resp[10];
+	float conta = 0;
+
+	struct cardapio ItemTemp;
+	struct pedido pedido_client;
+	struct mesa MesaN = {"pedido_mesa_", 0, ".bin", " "};
+
+	while(true)
+	{
+		puts("Digite o numero da mesa");
+		scanf("%d", &MesaN.idMesa);
+		sprintf(MesaN.nomeArquivo,"%s%d%s",MesaN.nome1,MesaN.idMesa,MesaN.nome2);
+		if ((strcmp(MesaN.nomeArquivo, "pedido_mesa_0.bin") == 0))
+		{
+			puts("Numero de Mesa Invalido");
+		}
+		else
+		{
+			arq_mesa = fopen(MesaN.nomeArquivo,"rb");
+			if (arq_mesa == NULL)
+			{
+				printf("Mesa %d nao existe\n", MesaN.idMesa);
+			}
+			else
+			{
+				arq_com = fopen ("cardapio_comidas.bin","rb");
+				puts("Comidas Consumidas:");
+				while (!feof(arq_mesa))
+				{
+					fread(&pedido_client, sizeof(struct pedido), 1, arq_mesa);
+					while (!feof(arq_com))
+					{
+						fread(&ItemTemp, sizeof(struct cardapio), 1, arq_com);
+						//printf("%d%c -------Pedido\n", pedido_client.int_cod, pedido_client.id_cod);
+						//printf("%d%c %s %.2f -------Cardapio\n", ItemTemp.codigo, ItemTemp.id, ItemTemp.nome_Item, ItemTemp.preco);
+						if ((pedido_client.int_cod == ItemTemp.codigo) && (pedido_client.id_cod == 'c'))  
+						{
+							printf("%s R$:%.2f\n",ItemTemp.nome_Item, ItemTemp.preco);
+							conta = conta + ItemTemp.preco;
+							break;
+						}
+					}
+					rewind(arq_com);
+				}
+				fclose(arq_com);
+				arq_bebi = fopen ("cardapio_bebidas.bin","rb");
+				puts(" ");
+				rewind(arq_mesa);
+				puts("Bebidas Consumidas:");
+				while (!feof(arq_mesa))
+				{
+					fread(&pedido_client, sizeof(struct pedido), 1, arq_mesa);
+					while (!feof(arq_bebi))
+					{
+						fread(&ItemTemp, sizeof(struct cardapio), 1, arq_com);
+						//printf("%d%c -------Pedido\n" , pedido_client.int_cod, pedido_client.id_cod);
+						//printf("%d%c %s %.2f -------Cardapio\n", ItemTemp.codigo, ItemTemp.id, ItemTemp.nome_Item, ItemTemp.preco);
+						if ((pedido_client.int_cod == ItemTemp.codigo) && (pedido_client.id_cod == 'b'))  
+						{
+							printf("%s R$:%.2f\n",ItemTemp.nome_Item, ItemTemp.preco);
+							conta = conta + ItemTemp.preco;
+							break;
+						}
+					}
+					rewind(arq_bebi);
+				}
+				printf("Sua conta é de : R$%.2f\n", conta);
+				fclose(arq_bebi);
+				fclose(arq_mesa);
+				break;
+			}
+		}
+	}
+	while (true){
+		puts("Deseja solicitar outra conta ?");
+		scanf("%s", resp);
+		if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
+		{
+			soliConta();
+			break;
+		}
+		else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
+		{
+			main();
+			break;
+		}
+		else
+		{
+			puts("Digite Sim ou Nao");
+		}
+	}
 	return 0;
 }
