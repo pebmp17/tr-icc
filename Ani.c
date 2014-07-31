@@ -236,7 +236,7 @@ int main(void)
 	system("sleep 0.35");
 	system("clear");
 	puts(" ");
-	puts ("");
+	puts (" ");
 	puts ("o");
 	puts (" ");
 	puts (" ");
@@ -244,7 +244,7 @@ int main(void)
 	system("sleep 0.35");
 	system("clear");
 	puts(" ");
-	puts ("");
+	puts (" ");
 	puts (" ");
 	puts (" ");
 	puts (" ");
