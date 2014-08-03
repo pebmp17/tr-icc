@@ -342,13 +342,14 @@ int consultar_Item (FILE *arq, int noi)
 {
 	struct cardapio ItemTemp;
 	char resp[10], consult[30];
-	int find = 0;
+	int find;
 	if (noi == 1)
 		puts("Qual bebida voce deseja consultar?");
 	else if (noi == 2)
 		puts("Qual comida voce deseja consultar?");
 	scanf("%s",consult);
 	rewind(arq);
+	find = 0;
 	while ((!feof(arq)) && (find == 0))
 	{
 		fread(&ItemTemp, sizeof(struct cardapio), 1, arq);
@@ -359,8 +360,6 @@ int consultar_Item (FILE *arq, int noi)
 			find = 1;
 		}
 	}
-	find = 0;
-	rewind(arq);
 	if(find == 0)
 	{
 		puts("Item não encontrado");
@@ -399,13 +398,15 @@ int editar_Item (FILE *arq, int noi)
 {
 	struct cardapio ItemTemp;
 	char resp[10], consult[30], spresso[10];
-	int find = 0;
+	int find;
 	char *tstspreso;
 	if (noi == 1)
 		puts("Qual bebida voce deseja editar?");
 	else if (noi == 2)
 		puts("Qual comida voce deseja editar?");
 	scanf("%s",consult);
+	find = 0;
+	rewind(arq);
 	while ((!feof(arq)) && (find == 0))
 	{
 		fread(&ItemTemp, sizeof(struct cardapio), 1, arq);
@@ -431,8 +432,6 @@ int editar_Item (FILE *arq, int noi)
 			find = 1;
 		}
 	}
-	find = 0;
-	rewind(arq);
 	if(find == 0)
 	{
 		puts("Item não encontrado");
@@ -471,12 +470,14 @@ int remover_Item (FILE *arq, int noi)
 	struct cardapio ItemTemp;
 	char resp[10];
 	char consult [30];
-	int find = 0;
+	int find;
 	if (noi == 1)
 		puts("Qual bebida voce deseja remover?");
 	else if (noi == 2)
 		puts("Qual comida voce deseja remover?");
 	scanf("%s",consult);
+	find = 0;
+	rewind(arq);
 	while ((!feof(arq)) && (find == 0))
 	{
 		fread(&ItemTemp, sizeof(struct cardapio), 1, arq);
@@ -510,8 +511,6 @@ int remover_Item (FILE *arq, int noi)
 			}
 		}
 	}
-	find = 0;
-	rewind(arq);
 	if(find == 0)
 	{
 		puts("Item não encontrado");
@@ -552,7 +551,7 @@ int mkPedido()
 	FILE *arq_mesa;
 	FILE *arq_idMax;
 	char resp[10],Item_Nome[30];
-	int brek = 0, find = 0;
+	int brek = 0, find;
 
 	struct pedido pedido_client;
 	struct mesa MesaN = {"pedido_mesa_", 0, ".bin", " "};
@@ -564,6 +563,8 @@ int mkPedido()
 	sprintf(MesaN.nomeArquivo,"%s%d%s",MesaN.nome1,MesaN.idMesa,MesaN.nome2);
 	while (brek == 0)
 	{
+		find = 0;
+		brek = 0;
 		arq_bebi = fopen ("cardapio_bebidas.bin","r");
 		if (arq_bebi == NULL)
 		{
