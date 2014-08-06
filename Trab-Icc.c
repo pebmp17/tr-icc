@@ -92,7 +92,7 @@ int mGerenCard()
 		{
 			scape = 1;
 			system("clear");
-			puts("\nBebidas");
+			puts("Bebidas");
 			puts("--------");
 			menuGerenItens(1);
 		}
@@ -100,7 +100,7 @@ int mGerenCard()
 		{
 			scape = 1;
 			system("clear");
-			puts("\nComidas");
+			puts("Comidas");
 			puts("--------");
 			menuGerenItens(2);
 		}
@@ -576,10 +576,11 @@ int mkPedido()
 			puts("Cardapio");
 			puts("---------");
 			puts("Bebidas Disponíveis:");
-			while (feof(arq_bebi) == 0)
+			fread(&ItemTemp, sizeof(struct cardapio), 1, arq_bebi);
+			while (!feof(arq_bebi))
 			{
-				fread(&ItemTemp, sizeof(struct cardapio), 1, arq_bebi);
 				printf("%d %s R$:%.2f\n",ItemTemp.codigo, ItemTemp.nome_Item, ItemTemp.preco);
+				fread(&ItemTemp, sizeof(struct cardapio), 1, arq_bebi);
 			}
 			rewind(arq_bebi);
 		}
@@ -592,13 +593,14 @@ int mkPedido()
 		else
 		{
 			puts("Comidas Disponíveis:");
-			while (feof(arq_com) == 0)
+			fread(&ItemTemp, sizeof(struct cardapio), 1, arq_com);
+			while (!feof(arq_com))
 			{
-				fread(&ItemTemp, sizeof(struct cardapio), 1, arq_com);
 				if (ItemTemp.codigo != 0)
 				{
 					printf("%d %s R$:%.2f\n",ItemTemp.codigo, ItemTemp.nome_Item, ItemTemp.preco);
 				}
+				fread(&ItemTemp, sizeof(struct cardapio), 1, arq_com);
 			}
 			rewind(arq_com);
 			puts(" ");
@@ -628,13 +630,12 @@ int mkPedido()
 		{
 			while ((!feof(arq_bebi)) && (find == 0))
 			{
-				(fread(&ItemTemp, sizeof(struct cardapio), 1, arq_bebi));
+				fread(&ItemTemp, sizeof(struct cardapio), 1, arq_bebi);
 				if ((strcmp(Item_Nome, ItemTemp.nome_Item) == 0))
 				{
 					pedido_client.int_cod = ItemTemp.codigo;
 					arq_mesa = fopen(MesaN.nomeArquivo,"ab");
 					fwrite(&pedido_client, sizeof(struct pedido), 1, arq_mesa);
-					printf("%d%c\n", pedido_client.int_cod, pedido_client.id_cod);
 					fclose(arq_mesa);
 					find = 1;
 				}
@@ -650,7 +651,6 @@ int mkPedido()
 					pedido_client.int_cod = ItemTemp.codigo;
 					arq_mesa = fopen(MesaN.nomeArquivo,"ab");
 					fwrite(&pedido_client, sizeof(struct pedido), 1, arq_mesa);
-					printf("%d%c\n", pedido_client.int_cod, pedido_client.id_cod);
 					fclose(arq_mesa);
 					find = 1;
 				}
@@ -732,44 +732,44 @@ int soliConta()
 			{
 				arq_com = fopen ("cardapio_comidas.bin","rb");
 				puts("Comidas Consumidas:");
+				fread(&pedido_client, sizeof(struct pedido), 1, arq_mesa);
 				while (!feof(arq_mesa))
 				{
-					fread(&pedido_client, sizeof(struct pedido), 1, arq_mesa);
+					fread(&ItemTemp, sizeof(struct cardapio), 1, arq_com);
 					while (!feof(arq_com))
 					{
-						fread(&ItemTemp, sizeof(struct cardapio), 1, arq_com);
-						//printf("%d%c -------Pedido\n", pedido_client.int_cod, pedido_client.id_cod);
-						//printf("%d%c %s %.2f -------Cardapio\n", ItemTemp.codigo, ItemTemp.id, ItemTemp.nome_Item, ItemTemp.preco);
 						if ((pedido_client.int_cod == ItemTemp.codigo) && (pedido_client.id_cod == 'c'))  
 						{
 							printf("%s R$:%.2f\n",ItemTemp.nome_Item, ItemTemp.preco);
 							conta = conta + ItemTemp.preco;
 							break;
 						}
+						fread(&ItemTemp, sizeof(struct cardapio), 1, arq_com);
 					}
 					rewind(arq_com);
+					fread(&pedido_client, sizeof(struct pedido), 1, arq_mesa);
 				}
 				fclose(arq_com);
 				arq_bebi = fopen ("cardapio_bebidas.bin","rb");
 				puts(" ");
 				rewind(arq_mesa);
 				puts("Bebidas Consumidas:");
+				fread(&pedido_client, sizeof(struct pedido), 1, arq_mesa);
 				while (!feof(arq_mesa))
 				{
-					fread(&pedido_client, sizeof(struct pedido), 1, arq_mesa);
+					fread(&ItemTemp, sizeof(struct cardapio), 1, arq_com);
 					while (!feof(arq_bebi))
 					{
-						fread(&ItemTemp, sizeof(struct cardapio), 1, arq_com);
-						//printf("%d%c -------Pedido\n" , pedido_client.int_cod, pedido_client.id_cod);
-						//printf("%d%c %s %.2f -------Cardapio\n", ItemTemp.codigo, ItemTemp.id, ItemTemp.nome_Item, ItemTemp.preco);
 						if ((pedido_client.int_cod == ItemTemp.codigo) && (pedido_client.id_cod == 'b'))  
 						{
 							printf("%s R$:%.2f\n",ItemTemp.nome_Item, ItemTemp.preco);
 							conta = conta + ItemTemp.preco;
 							break;
 						}
+						fread(&ItemTemp, sizeof(struct cardapio), 1, arq_com);
 					}
 					rewind(arq_bebi);
+					fread(&pedido_client, sizeof(struct pedido), 1, arq_mesa);
 				}
 				printf("Sua conta é de : R$%.2f\n", conta);
 				fclose(arq_bebi);
@@ -783,11 +783,13 @@ int soliConta()
 		scanf("%s", resp);
 		if((strcmp(resp, "Sim") == 0) || (strcmp(resp, "sim")) == 0)
 		{
+			system("clear");
 			soliConta();
 			break;
 		}
 		else if((strcmp(resp, "Nao") == 0) || (strcmp(resp, "nao")) == 0)
 		{
+			system("clear");
 			main();
 			break;
 		}
