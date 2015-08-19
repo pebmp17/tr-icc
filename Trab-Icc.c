@@ -14,7 +14,7 @@ int remover_Item(FILE *arq, int noi);
 FILE *arq_sis;
 FILE *arq_idMax;
 char optmainmenu = ' ';
-
+////////////////////////////////////////////////
 struct cardapio {int codigo;char id;char nome_Item[30]; float preco;};
 struct pedido {int int_cod;char id_cod;};
 struct mesa {char nome1[20];int idMesa;char nome2[5];char nomeArquivo[40];};
